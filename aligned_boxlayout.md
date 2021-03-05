@@ -91,6 +91,44 @@ c := container.NewHBoxAligned(layout.CrossAlignmentEnd,
 
 It also would allow us to solve cross axis alignment problems for text-based widgets as discussed in [#1701](https://github.com/fyne-io/fyne/issues/1701) using the option `layout.CrossAlignmentBaseline`.
 
+### Other use cases from users issues
+
+#### 1. Issue #2057 (related to expanded feature)
+
+User wanted something like this:
+
+<img width="200" alt="" src="https://user-images.githubusercontent.com/12239342/110042678-1af4c980-7d14-11eb-833c-9ce817386cde.png">
+
+He began with a `container.VBox` as it seems to be the more logical start, however then he realized,
+that he cannot build that interface with `VBox`, so he blocks and raises an issue. Although, it is possible to do it with current API:
+
+```go
+logEntry := widget.NewLabel("Log text\n" + loremIpsum)
+logEntry.Wrapping = fyne.TextWrapWord
+logBox := container.NewScroll(logEntry)
+content := container.NewBorder(
+	container.NewVBox(inputEntry, beginBtn),
+	container.NewVBox(stopBtn, resultEntry),
+	nil, nil,
+	logBox,
+)
+```
+
+Maybe it would not be easy for new users, and a bit confusing. Also it maybe would push extra work to the app as it would need to build 3 containers (1 Border and 2 VBoxes). Proposed solution would increase code readability and use only 2 containers:
+
+```go
+logEntry := widget.NewLabel("Log text\n" + loremIpsum)
+logEntry.Wrapping = fyne.TextWrapWord
+logBox := container.NewScroll(logEntry)
+content := container.NewVBox(
+	inputEntry,
+	beginBtn,
+	container.NewVBoxExpanded(logBox), // or 2nd. approach container.NewExpandedBox(logBox)
+	stopBtn,
+	resultEntry,
+)
+```
+
 ## Architecture / API
 
 ### 1. New `layout.CrossAlignment` type
