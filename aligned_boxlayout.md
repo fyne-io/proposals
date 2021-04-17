@@ -178,7 +178,7 @@ The initial implementation can be found in (while this remains as proposal): htt
 
 This fork is not replacing current VBox and HBox layouts, in order to compare them. It adds a new layout `nboxLayout` to test this implementation (under `cmd/nboxlayout_demo`).
 
-<img width="594" alt="aligned_boxlayout_demo" src="https://user-images.githubusercontent.com/12239342/115108697-7a5f0f80-9f37-11eb-9f8a-da3f99cc461b.png">
+<img width="497" alt="aligned_boxlayout_demo" src="https://user-images.githubusercontent.com/12239342/115122763-44457e00-9f7f-11eb-969f-0ca2a8b39cb8.png">
 
 ## Prior art
 
