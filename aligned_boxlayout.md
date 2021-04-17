@@ -1,6 +1,6 @@
-# Aligned and Expandable BoxLayout
+# Aligned BoxLayout
 
-Following the discussion in [#1840](https://github.com/fyne-io/fyne/pull/1840), cross axis alignment would be useful for `fyne.Layouts` to allow them be able to organize widgets with different cross axis sizes. Expandable feature is optional in this proposal but it is maybe useful as you can see later in this text.
+Following the discussion in [#1840](https://github.com/fyne-io/fyne/pull/1840), cross axis alignment would be useful for `fyne.Layouts` to allow them be able to organize widgets with different cross axis sizes.
 
 ## Glossary
 
@@ -58,37 +58,6 @@ c := container.NewHBoxAligned(layout.CrossAlignmentEnd,
 )
 ```
 
-Now if we want to expand the entry to look like this:
-
-<img width="200" alt="" src="https://user-images.githubusercontent.com/12239342/106950360-4b891980-66fc-11eb-90ce-9237f1d932f5.png">
-
-We should write something like:
-
-```go
-c := container.NewVBox(
-	container.NewBorder(nil, nil, nil,
-		container.NewHBox(
-			container.NewVBox(layout.NewSpacer(), createIcon(theme.ContentCopyIcon())),
-			container.NewVBox(layout.NewSpacer(), createIcon(theme.ContentPasteIcon())),
-			container.NewVBox(layout.NewSpacer(), createIcon(theme.ContentRemoveIcon())),
-		),
-		widget.NewEntry(),
-	),
-	layout.NewSpacer(),
-)
-```
-
-This proposal would allow us to write:
-
-```go
-c := container.NewHBoxAligned(layout.CrossAlignmentEnd,
-	container.NewHBoxExpanded(widget.NewEntry()),
-	createIcon(theme.ContentCopyIcon()),
-	createIcon(theme.ContentPasteIcon()),
-	createIcon(theme.ContentRemoveIcon()),
-)
-```
-
 It also would allow us to solve cross axis alignment problems for text-based widgets as discussed in [#1701](https://github.com/fyne-io/fyne/issues/1701) using the option `layout.CrossAlignmentBaseline`.
 
 ### Other use cases from users issues
@@ -114,7 +83,7 @@ content := container.NewBorder(
 )
 ```
 
-Maybe it would not be easy for new users, and a bit confusing. Also it maybe would push extra work to the app as it would need to build 3 containers (1 Border and 2 VBoxes). Proposed solution would increase code readability and use only 2 containers:
+Maybe it would not be easy for new users, and a bit confusing. Also it maybe would push extra work to the app as it would need to build 3 containers (1 Border and 2 VBoxes). Proposed solution would increase code readability and use only 1 container:
 
 ```go
 logEntry := widget.NewLabel("Log text\n" + loremIpsum)
@@ -123,7 +92,7 @@ logBox := container.NewScroll(logEntry)
 content := container.NewVBox(
 	inputEntry,
 	beginBtn,
-	container.NewVBoxExpanded(logBox), // or 2nd. approach container.NewExpandedBox(logBox)
+	layout.NewExpander(logBox),
 	stopBtn,
 	resultEntry,
 )
@@ -131,7 +100,35 @@ content := container.NewVBox(
 
 ## Architecture / API
 
-### 1. New `layout.CrossAlignment` type
+### 1. New `TextBaselineable` interface type
+
+To accomplish baseline alignment, container would need to know about the text baseline of the given canvas objects, so a way to expose this value could be through a new interface type called `TextBaselineable` (or something similar):
+
+```go
+// canvasobject.go
+package fyne
+
+// TextBaselineable describes any object that has the ability to be aligned based on
+// its text baseline.
+type TextBaselineable interface {
+	// DistanceToTextBaseline returns the distance from the top of the object until
+	// its text baseline.
+	DistanceToTextBaseline() float32
+}
+```
+
+Currently, this interface would be implemented by:
+
+- `canvas.Text`
+- `widget.Button`
+- `widget.Check`
+- `widget.Entry`
+- `widget.Hyperlink`
+- `widget.Label`
+- `widget.SelectEntry`
+- `widget.Select`
+
+### 2. New `layout.CrossAlignment` type
 
 There should be a new type called CrossAlignment (name suggestions are welcome!):
 
@@ -157,42 +154,31 @@ This type would help us to specify the cross axis alignment in box layouts.
 - `CrossAlignmentBaseline`: This option is only useful for HBox, it aligns the content to the text baseline. For VBox, this alignment would behave as CrossAlignmentStart.
 - `CrossAlignmentStretch`: Stretch the cross axis size of the children (current behavior).
 
-### 2. New container constructors
-
-#### 2.1. First approach
+### 3. New container constructors
 
 - `container.NewVBox(objects...)`: It would work just as before (setting crossAlignment to CrossAlignmentStretch).
 - `container.NewVBoxAligned(crossAlignment, objects...)`: It would work just like `NewVBox`, but instead of stretching the cross axis by default, user can set the desired cross alignment.
-- `container.NewVBoxExpanded(objects...)`: It would resize the objects to have the same size in the vertical axis, and stretching their horizontal axis (setting crossAlignment to CrossAlignmentStretch).
-- `container.NewVBoxExpandedAligned(crossAlignment, objects...)`: It would work just like `NewVBoxExpanded`, but instead of stretching the cross axis by default, user can set the desired cross alignment.
-
 - `container.NewHBox(objects...)`: It would work just as before (setting crossAlignment to CrossAlignmentStretch).
 - `container.NewHBoxAligned(crossAlignment, objects...)`: It would work just like `NewHBox`, but instead of stretching the cross axis by default, user can set the desired cross alignment.
-- `container.NewHBoxExpanded(objects...)`: It would resize the objects to have the same size in the horizontal axis, and stretching their vertical axis (setting crossAlignment to CrossAlignmentStretch).
-- `container.NewHBoxExpandedAligned(crossAlignment, objects...)`: It would work just like `NewHBoxExpanded`, but instead of stretching the cross axis by default, user can set the desired cross alignment.
 
-#### 2.2. Second approach
+### 4. New canvas object `layout.NewExpander`
 
-First approach would introduce a lot of new container constructors that would be quite confusing. So a second approach would be to only have:
+Unfortunately, current `container.NewBorder` could not be used very well (to expand objects) alongside with the new `BoxAligned` containers. I mean it could be used but you won't be able to perform any kind of alignment, because in this case `container.NewBorder` would have the reponsability to align the objects.
+To mitigate this limitation, a new canvas object under the layout package is proposed: `layout.NewExpander`.
 
-- `container.NewVBox(objects...)`
-- `container.NewVBoxAligned(crossAlignment, objects...)`
-- `container.NewHBox(objects...)`
-- `container.NewHBoxAligned(crossAlignment, objects...)`
+Just like the `Spacer`, `Expanders` objects only have real meaning inside a box layout. This object works like a wrapper for an actual object that will expand its main axis inside a box layout.
 
-And have a way to specify when we want to expand an object in its main axis. There could be a new container called `ExpandedBox` and internally the boxLayout could detect it and expand its main axis size (just like the `spacers`). However, this new container would only be useful as a child of a VBox/HBox. Its definition could be:
-
-- `container.NewExpandedBox`: It will expand the main axis of its children if its parent is a VBox/HBox, otherwise it will expand on both axis (something like MaxLayout).
-
-#### 2.3. Third approach
-
-Keep the four constructors of the Second approach and ignore the `expandable` feature.
+```go
+layout.NewExpander(child)
+```
 
 ## Implementation
 
-The initial implementation can be found in (while this remains as proposal): https://github.com/fpabl0/fyne/tree/feature/aligned-expanded-boxlayout
+The initial implementation can be found in (while this remains as proposal): https://github.com/fpabl0/fyne/tree/feature/aligned-boxlayout
 
 This fork is not replacing current VBox and HBox layouts, in order to compare them. It adds a new layout `nboxLayout` to test this implementation (under `cmd/nboxlayout_demo`).
+
+<img width="594" alt="aligned_boxlayout_demo" src="https://user-images.githubusercontent.com/12239342/115108697-7a5f0f80-9f37-11eb-9f8a-da3f99cc461b.png">
 
 ## Prior art
 
