@@ -1,6 +1,6 @@
 # [Title]
 
-[Introdution]
+[Introduction]
 
 <!-- for more information about completing this template please see
 https://github.com/fyne-io/fyne/wiki/Contributing%3A-Proposals -->
