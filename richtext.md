@@ -48,8 +48,11 @@ type RichText struct {
 }
 
 type RichTextSegment interface {
-	TextRepresentation() string
-	CanvasRepresentation() fyne.CanvasObject
+	Textual() string
+	Visual() fyne.CanvasObject
+
+	Select(pos1, pos2 fyne.Position)
+	SelectedText() string
 }
 
 type TextSegment struct { // would implement RichTextSegment, handles rendering text
@@ -87,5 +90,7 @@ The new shaper may not be ready for Fyne 2.1 but we need to build this refactori
 
 ## Prior art
 
-There is various prior art for the shaping / international components of the text work at [Text Refactor(https://github.com/fyne-io/fyne/wiki/Text-Refactor),
-but the details of that work are not part of this proposal - it will be carried out in a [shared shaping library](https://github.com/go-text/shaping), [shared directionality library](https://github.com/go-text/di), and [shared font library](TBD).
+There is various prior art for the shaping / international components of the text work at [Text Refactor](https://github.com/fyne-io/fyne/wiki/Text-Refactor),
+but those details are not part of this proposal.
+That work will be carried out in a [shared shaping library](https://github.com/go-text/shaping), [shared directionality library](https://github.com/go-text/di),
+and [shared font library](#).
