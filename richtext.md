@@ -88,4 +88,4 @@ The new shaper may not be ready for Fyne 2.1 but we need to build this refactori
 ## Prior art
 
 There is various prior art for the shaping / international components of the text work at [Text Refactor(https://github.com/fyne-io/fyne/wiki/Text-Refactor),
-but the details of that work are not part of this proposal - it will be carried out in a [shared library](https://github.com/go-text/shaping).
+but the details of that work are not part of this proposal - it will be carried out in a [shared shaping library](https://github.com/go-text/shaping), [shared directionality library](https://github.com/go-text/di), and [shared font library](TBD).
