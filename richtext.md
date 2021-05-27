@@ -21,7 +21,7 @@ The lead-up to this proposal has been discussed in various places
 * The BiDi/Shaping libraries
   - built in collaboration with Gio team will underpin the drawing elements of this work, but are not described in this proposal.
 * RichText widget that encapsulates the parsing, styling and shaping for all our text requirements (see more in Design)
-* textPresenter capabilities will be moved to RichText and the textProvider interface moved to configuration calls.
+* textProvider capabilities will be moved to RichText and the textPresenter interface moved to configuration calls.
 * To continue supporting widgets that expose a Text field we will support passing a \*string or \*[]rune into RichText, working around the previous need for copying and comparing large strings in Refresh.
 * The Label widget will be re-worked to simply wrap a RichText.
 
