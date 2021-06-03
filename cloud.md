@@ -22,11 +22,11 @@ As a platform that is democratising access to techology we also need to provide 
     - ProviderIcon
     - ProviderDescription
 
-* CloudSync interface
-    - EnableCloudPreferences(fyne.App) fyne.Preferences
+* CloudProviderSync interface
+    - CloudPreferences(fyne.App) fyne.Preferences
 
-* CloudStorage interface
-    - EnableCloudStorage(fyne.App) fyne.Storage
+* CloudProviderStorage interface
+    - CloudStorage(fyne.App) fyne.Storage
 
 * App.SetCloudProvider(CloudProvider) // configure cloud for this app
 
@@ -50,7 +50,7 @@ This package imports all of the known providers.
 
 ## `fyne.io/cloud/provider/xxx`
 
-NewXxxCloud fyne.CloudProvider
+NewProvider() fyne.CloudProvider
 
 ## Design
 
