@@ -22,7 +22,7 @@ As a platform that is democratising access to techology we also need to provide 
     - ProviderIcon
     - ProviderDescription
 
-* CloudProviderSync interface
+* CloudProviderPreferences interface
     - CloudPreferences(fyne.App) fyne.Preferences
 
 * CloudProviderStorage interface
@@ -34,18 +34,14 @@ As a platform that is democratising access to techology we also need to provide 
 
 ## `fyne.io/cloud`
 
-probably a place for lots of docs and information about implementing etc. :)
-
-* CloudProviders() []fyne.CloudProvider
-* RegisterProvider(fyne.CloudProvider)
-
-## `fyne.io/cloud/auto`
-
 This package imports all of the known providers.
 
-* EnableCloud(fyne.App)
+Also a place for lots of docs and information about implementing etc. :)
+
+* Enable(fyne.App)
   - auto-wires up the user's choice, assuming they have previously chosen / configured a cloud provider.
-* PresentCloudChoice(fyne.App, fyne.Window)
+* Register(fyne.CloudProvider)
+* ShowSettings(fyne.App, fyne.Window)
   - will show the options that are available, leading to a configuration workflow.
 
 ## `fyne.io/cloud/provider/xxx`
