@@ -57,7 +57,7 @@ type RichTextSegment interface {
 
 type TextSegment struct { // would implement RichTextSegment, handles rendering text
 	Text string
-	Type RichTextStyle
+	Style RichTextStyle
 }
 
 type RichTextStyle struct {
