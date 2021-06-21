@@ -48,8 +48,9 @@ type RichText struct {
 }
 
 type RichTextSegment interface {
-	Textual() string
-	Visual() fyne.CanvasObject
+	Textual() string // text representation
+	Update(yne.CanvasObject) // update existing visual
+	Visual() fyne.CanvasObject // create visual representation
 
 	Select(pos1, pos2 fyne.Position)
 	SelectedText() string
