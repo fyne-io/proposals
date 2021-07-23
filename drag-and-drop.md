@@ -1,8 +1,8 @@
 # Drag-and-Drop
 
 The proposal to provide native support Drag-and Drop operations:
-* drag and drop between widgets 
-* receive drag and drop to application from a desktop or another application
+* drag and drop between **fyne.CanvasObject** 
+* receive drag and drop by **fyne.CanvasObject** from a desktop or another application
 
 ## Background
 
@@ -15,7 +15,7 @@ This functionality doesn't provide an interface to communicate between widgets w
 
 *Note: Drag and drop to application icon has different implementation on macOS. Instead of passing path/url as command line argument, the macOS require implementation at Application API. The Application API is implemented by go-gl/glfw and to implement drop to application icon require go-gl/glfw changes.*
 
-*Note: Initiate a drag of a widget from Fyne application to another application is depend on application support the platform (go-gl/glfw) provides. As of now,  the go-gl/glfw changes require to support this. Hence, this topic is moved out of design proposal for farther discussions as a separate initiative.*
+*Note: Initiate a drag of a widget from Fyne application to another application is depend on application support the platform (go-gl/glfw) provides. As of now,  the go-gl/glfw changes require to support this. Hence, this topic is moved out of scope for farther discussions as a separate initiative.*
 
 ## Architecture / API
 
@@ -49,7 +49,7 @@ type DraggableIcon interface {
 
 ### Drag-and-Drop within the Fyne application
 
-The drag and drop within the Fyne application is implemented by finding the component under the mouse pointer and supporting **fyne.Droppable** interface in each of the windows of application sorted by z-index. Only the first window with object of **fyne.Droppable** will get the call with fyne.Draggable.
+The drag and drop within the Fyne application is implemented by finding the component under the mouse pointer and supporting **fyne.Droppable** interface in each of the application windows sorted by z-index. Only the first window found with object of **fyne.Droppable** will get the call with fyne.Draggable. This will solve potential issue when there are two or more overlapping windows.
 
 The macOS implementation was tested to confirm this design.
 
