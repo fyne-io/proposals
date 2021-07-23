@@ -1,4 +1,4 @@
-# Drag-adn-Drop
+# Drag-and-Drop
 
 The proposal to provide native support Drag-and Drop opeerations:
 * drag and drop between widgets 
@@ -11,7 +11,7 @@ There are few issues opened and related to missing drag and drop functionality:
 * Add drag and drop support https://github.com/fyne-io/fyne/issues/142
 * Drag and drop to application icon on macOS https://github.com/fyne-io/fyne/issues/497
 
-Existing interface provide a minimum capabilities to programmatically start a drug operation and get notified when it complets.
+Existing interface provide a minimum capabilities to programmatically start a drag operation and get notified when it complets.
 This functionality doesn't provide an interface to communicate between widgets within the application nor send/receive drag and drop with other applications.
 
 ## Architecture / API
