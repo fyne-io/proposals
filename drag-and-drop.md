@@ -65,10 +65,10 @@ type Payload interface {}
 
 To receive the drag-and-drop from outside the Fyne application the **fyne.CanvasObject** must implement the **fyne.Droppable** interface.
 
-The **fyne.Draggable** can implement **fyne.Paintable** interface to provide an image that can be used to paint a cursor during drag-and-drop operation.
+The **fyne.Draggable** can implement **fyne.DraggableIcon** interface to provide an image that can be used to paint a cursor during drag-and-drop operation.
 
 ```
-type Paintable interface {
+type DraggableIcon interface {
 	CursorImage() image.Image
 }
 
