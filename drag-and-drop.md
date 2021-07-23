@@ -2,8 +2,8 @@
 
 The proposal to provide native support Drag-and Drop opeerations:
 * drag and drop between widgets 
-* receive drag and drop URL(s) to application from a desktop or another application
-* start drag operation from Fyne application with URL(s) to another desltop application (pending external changes)
+* receive drag and drop to application from a desktop or another application
+* start drag operation from Fyne application with a text string to another desltop application (pending external changes)
 
 ## Background
 
