@@ -31,21 +31,17 @@ type DragReceiver interface {
 }
 ```
 
-To pass information to receiver the **fyne.Draggable** can also implement **drag.Info** interface.
+To pass information to receiver the **fyne.Draggable** can also implement **fyne.Info** interface.
 
 ```
-package drag
-
 type Info interface {
 	Payload() Payload
 }
 ```
 
-To initiate a drag-and-drop outside the Fyne application the object implement **drag.AppDraggable** interface. This interface will allow the object prepare the **drag.Payload**.
+To initiate a drag-and-drop outside the Fyne application the object implement **fyne.AppDraggable** interface. This interface will allow the object prepare the **fyne.Payload**.
 
 ```
-package drag
-
 type AppDraggable interface {
 	// StartDrag return true when object ready to start drag-and-drop
 	StartDrag() bool
@@ -54,25 +50,23 @@ type AppDraggable interface {
 }
 ```
 
-The initial implementations for **drag.Payload** will include **drag.PayloadString**, **drag.PayloadSliceOfString**. Other types can be added as needed and assuming the platform supports such type.
+~~The initial implementations for **fyne.Payload** will include **fyne.PayloadString**, **fyne.PayloadSliceOfString**. Other types can be added as needed and assuming the platform supports such type.~~
 
 ```
-package drag
-
 type Payload interface {}
-
-type PayloadString string
-type PayloadSliceOfString []string
-
 ```
+
+~~type PayloadString string~~
+
+~~type PayloadSliceOfString []string~~
+
 
 To receive the drag-and-drop from outside the Fyne application the **fyne.CanvasObject** must implement the **fyne.DragReceiver** interface.
 
 The **fyne.Draggable** can implement **drag.Paintable** interface to provide an image that can be used to paint a cursor during drag-and-drop operation.
 
-```
-package drag
 
+```
 type Paintable interface {
 	CursorImage() image.Image
 }
@@ -101,7 +95,7 @@ The proposed implementation will utilize this functionality to deliver the drop 
 
 To implement the outside Drag-and-Drop the go-gl/glfw changes will be require as there is no support available for such operation.
 
-The driver will check if object implement **drag.AppDraggable**. When object is ready to start a drag (StartDrag() call), the payload will be collected from the object and this information passed to the OS drag-and-drop mechaism.
+The driver will check if object implement **fyne.AppDraggable**. When object is ready to start a drag (StartDrag() call), the payload will be collected from the object and this information passed to the OS drag-and-drop mechaism.
 
 #### Darwin
 
