@@ -1,9 +1,9 @@
 # Drag-and-Drop
 
-The proposal to provide native support Drag-and Drop opeerations:
+The proposal to provide native support Drag-and Drop operations:
 * drag and drop between widgets 
 * receive drag and drop to application from a desktop or another application
-* start drag operation from Fyne application with a text string to another desltop application (pending external changes)
+* start drag operation from Fyne application with a text string to another desktop application (pending external changes)
 
 ## Background
 
@@ -11,10 +11,10 @@ There are few issues opened and related to missing drag and drop functionality:
 * Add drag and drop support https://github.com/fyne-io/fyne/issues/142
 * Drag and drop to application icon on macOS https://github.com/fyne-io/fyne/issues/497
 
-Existing interface provide a minimum capabilities to programmatically start a drag operation and get notified when it complets.
+Existing interface provide a minimum capabilities to programmatically start a drag operation and get notified when it completes.
 This functionality doesn't provide an interface to communicate between widgets within the application nor send/receive drag and drop with other applications.
 
-*Note, drag and drop to application icon has different implemenation on macOS. Instead of passing path/url as command line argument, the macOS require implementaion at Application API. The Application API is implemented by go-gl/glfw and to implement drop to application icon require go-gl/glfw changes.*
+*Note, drag and drop to application icon has different implementation on macOS. Instead of passing path/url as command line argument, the macOS require implementation at Application API. The Application API is implemented by go-gl/glfw and to implement drop to application icon require go-gl/glfw changes.*
 
 
 ## Architecture / API
@@ -90,13 +90,13 @@ The mobile implementation will be concern only with visible window.
 
 The existing go-gl/glfw already provide facilities to receive the drop from another application.
 
-The proposed implementation will utilize this functionality to deliver the drop directly to the object inplementing **fyne.Droppable** when found.
+The proposed implementation will utilize this functionality to deliver the drop directly to the object implementing **fyne.Droppable** when found.
 
 ### Drag to outside of the Fyne application (pending external changes)
 
 To implement the outside Drag-and-Drop the go-gl/glfw changes will be require as there is no support available for such operation.
 
-The driver will check if object implement **fyne.AppDraggable**. When object is ready to start a drag (StartDrag() call), the payload will be collected from the object and this information passed to the OS drag-and-drop mechaism.
+The driver will check if object implement **fyne.AppDraggable**. When object is ready to start a drag (StartDrag() call), the payload will be collected from the object and this information passed to the OS drag-and-drop mechanism.
 
 #### Darwin
 
