@@ -14,6 +14,9 @@ There are few issues opened and related to missing drag and drop functionality:
 Existing interface provide a minimum capabilities to programmatically start a drag operation and get notified when it complets.
 This functionality doesn't provide an interface to communicate between widgets within the application nor send/receive drag and drop with other applications.
 
+*Note, drag and drop to application icon has different implemenation on macOS. Instead of passing path/url as command line argument, the macOS require implementaion at Application API. The Application API is implemented by go-gl/glfw and to implement drop to application icon require go-gl/glfw changes.*
+
+
 ## Architecture / API
 
 Existing interface will not change to preserve compatibility with existing code.
