@@ -3,7 +3,6 @@
 The proposal to provide native support Drag-and Drop operations:
 * drag and drop between widgets 
 * receive drag and drop to application from a desktop or another application
-* start drag operation from Fyne application with a text string to another desktop application (pending external changes)
 
 ## Background
 
@@ -14,8 +13,9 @@ There are few issues opened and related to missing drag and drop functionality:
 Existing interface provide a minimum capabilities to programmatically start a drag operation and get notified when it completes.
 This functionality doesn't provide an interface to communicate between widgets within the application nor send/receive drag and drop with other applications.
 
-*Note, drag and drop to application icon has different implementation on macOS. Instead of passing path/url as command line argument, the macOS require implementation at Application API. The Application API is implemented by go-gl/glfw and to implement drop to application icon require go-gl/glfw changes.*
+*Note: Drag and drop to application icon has different implementation on macOS. Instead of passing path/url as command line argument, the macOS require implementation at Application API. The Application API is implemented by go-gl/glfw and to implement drop to application icon require go-gl/glfw changes.*
 
+*Note: Initiate a drag of a widget from Fyne application to another application is depend on application support the platform (go-gl/glfw) provides. As of now,  the go-gl/glfw changes require to support this. Hence, this topic is moved out of design proposal for farther discussions as a separate initiative.*
 
 ## Architecture / API
 
@@ -33,35 +33,6 @@ type Droppable interface {
 	DragDrop(Draggable)
 }
 ```
-
-To pass information to receiver the **fyne.Draggable** can also implement **fyne.DragInfo** interface.
-
-```
-type DragInfo interface {
-	Payload() Payload
-}
-```
-
-To initiate a drag-and-drop outside the Fyne application the object implement **fyne.AppDraggable** interface. This interface will allow the object prepare the **fyne.Payload**.
-
-```
-type AppDraggable interface {
-	// StartDrag return true when object ready to start drag-and-drop
-	StartDrag() bool
-	// Payload return Payload to attach to drag-and-drop session
-	Payload() Payload
-}
-```
-
-~~The initial implementations for **fyne.Payload** will include **fyne.PayloadString**, **fyne.PayloadSliceOfString**. Other types can be added as needed and assuming the platform supports such type.~~
-
-```
-type Payload interface {}
-```
-
-~~type PayloadString string~~
-
-~~type PayloadSliceOfString []string~~
 
 To receive the drag-and-drop from outside the Fyne application the **fyne.CanvasObject** must implement the **fyne.Droppable** interface.
 
@@ -92,6 +63,44 @@ The existing go-gl/glfw already provide facilities to receive the drop from anot
 
 The proposed implementation will utilize this functionality to deliver the drop directly to the object implementing **fyne.Droppable** when found.
 
+
+## Prior art
+
+
+## Drag-and-drop between Fyne app and another application
+
+* start drag operation from Fyne application with a text string to another desktop application (pending external changes)
+
+
+To pass information to receiver the **fyne.Draggable** can also implement **fyne.DragInfo** interface.
+
+```
+type DragInfo interface {
+	Payload() Payload
+}
+```
+
+To initiate a drag-and-drop outside the Fyne application the object implement **fyne.AppDraggable** interface. This interface will allow the object prepare the **fyne.Payload**.
+
+```
+type AppDraggable interface {
+	// StartDrag return true when object ready to start drag-and-drop
+	StartDrag() bool
+	// Payload return Payload to attach to drag-and-drop session
+	Payload() Payload
+}
+```
+
+~~The initial implementations for **fyne.Payload** will include **fyne.PayloadString**, **fyne.PayloadSliceOfString**. Other types can be added as needed and assuming the platform supports such type.~~
+
+```
+type Payload interface {}
+```
+
+~~type PayloadString string~~
+
+~~type PayloadSliceOfString []string~~
+
 ### Drag to outside of the Fyne application (pending external changes)
 
 To implement the outside Drag-and-Drop the go-gl/glfw changes will be require as there is no support available for such operation.
@@ -115,7 +124,3 @@ TBD - help wanted
 
 No implementation for Mobile platform.
 
-
-## Prior art
-
-[Inclusion of any relevant information from other toolkits, libraries etc]
