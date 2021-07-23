@@ -34,10 +34,10 @@ type Droppable interface {
 }
 ```
 
-To pass information to receiver the **fyne.Draggable** can also implement **fyne.Info** interface.
+To pass information to receiver the **fyne.Draggable** can also implement **fyne.DragInfo** interface.
 
 ```
-type Info interface {
+type DragInfo interface {
 	Payload() Payload
 }
 ```
