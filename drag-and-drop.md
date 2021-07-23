@@ -21,12 +21,12 @@ The proposed changes will extend the interface and give user missing capabilitie
 
 The **fyne.CanvasObject** wishing to initiate drag operation must implement **fyne.Draggable** interface. No interface changes.
 
-The **fyne.CanvasObject** wishing to receiver the drop must implement **fyne.DragReceiver** interface.
+The **fyne.CanvasObject** wishing to receiver the drop must implement **fyne.Droppable** interface.
 
 ```
 package fyne
 
-type DragReceiver interface {
+type Droppable interface {
 	DragDrop(Draggable)
 }
 ```
@@ -60,11 +60,9 @@ type Payload interface {}
 
 ~~type PayloadSliceOfString []string~~
 
+To receive the drag-and-drop from outside the Fyne application the **fyne.CanvasObject** must implement the **fyne.Droppable** interface.
 
-To receive the drag-and-drop from outside the Fyne application the **fyne.CanvasObject** must implement the **fyne.DragReceiver** interface.
-
-The **fyne.Draggable** can implement **drag.Paintable** interface to provide an image that can be used to paint a cursor during drag-and-drop operation.
-
+The **fyne.Draggable** can implement **fyne.Paintable** interface to provide an image that can be used to paint a cursor during drag-and-drop operation.
 
 ```
 type Paintable interface {
@@ -77,7 +75,7 @@ type Paintable interface {
 
 ### Drag-and-Drop within the Fyne application
 
-The drag and drop within the Fyne application is implemented by finding the component under the mouse pointer and supporting **fyne.DragReceiver** interface in each of the windows of application sorted by z-index. Only the first window with object of **fyne.DragReceiver** will get the call with fyne.Draggable.
+The drag and drop within the Fyne application is implemented by finding the component under the mouse pointer and supporting **fyne.Droppable** interface in each of the windows of application sorted by z-index. Only the first window with object of **fyne.Droppable** will get the call with fyne.Draggable.
 
 The macOS implementation was tested to confirm this design.
 
@@ -89,7 +87,7 @@ The mobile implementation will be concern only with visible window.
 
 The existing go-gl/glfw already provide facilities to receive the drop from another application.
 
-The proposed implementation will utilize this functionality to deliver the drop directly to the object inplementing **fyne.DragReceiver** when found.
+The proposed implementation will utilize this functionality to deliver the drop directly to the object inplementing **fyne.Droppable** when found.
 
 ### Drag to outside of the Fyne application (pending external changes)
 
